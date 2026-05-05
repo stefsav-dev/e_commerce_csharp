@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace JwtAuthDemo.Models;
+namespace e_commerce_backend.Models;
 
 public class ProductPrice
 {
@@ -13,7 +13,7 @@ public class ProductPrice
     
     [ForeignKey("ProductId")]
     public Product Product { get; set; } = null!;
-    
+
     [Required]
     [Column(TypeName = "decimal(18,2)")]
     public decimal Price { get; set; }
