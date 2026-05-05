@@ -12,7 +12,7 @@ public class ProductFilterDto
     public int PageSize { get; set; } = 10;
 }
 
-public class PageResponse<T>
+public class PagedResponse<T>
 {
     public List<T> Data { get; set; } = new();
     public int TotalCount { get; set; }

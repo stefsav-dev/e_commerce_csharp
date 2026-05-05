@@ -24,7 +24,7 @@ public class Product
     public string Category { get; set; } = string.Empty;
     public int StockQuantity { get; set; } = 0;
 
-    public int MinStockQuantity { get; set; } = 10;
+    public int MinStockLevel { get; set; } = 10;
 
     public bool IsActive {get; set; } = true;
 
@@ -36,7 +36,7 @@ public class Product
     [ForeignKey("CreatedByUserId")]
     public User CreatedBy { get; set; } = null!;
 
-    public ICollection<ProductPrice> Prices { get; set; } = new List<ProductPrice>();
+    public ICollection<ProductPrice> ProductPrices { get; set; } = new List<ProductPrice>();
 }
 
 public enum PriceType

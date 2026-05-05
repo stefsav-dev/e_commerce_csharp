@@ -78,6 +78,7 @@ builder.Services.AddAuthentication(options =>
 
 // Register Services
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 // Authorization Policies
 builder.Services.AddAuthorization(options =>
