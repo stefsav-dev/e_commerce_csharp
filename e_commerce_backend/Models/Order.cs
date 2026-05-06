@@ -19,9 +19,9 @@ public class Order
     public User User {get; set;} = null!;
 
     [Required]
-    public int CardId { get; set; }
+    public int CartId { get; set; }
 
-    [ForeignKey("CardId")]
+    [ForeignKey("CartId")]
     public Cart Cart { get; set; } = null!;
 
     [Required]
