@@ -1,5 +1,6 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
@@ -93,7 +94,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    dbContext.Database.Migrate();
+    await InitializeDatabaseAsync(dbContext, app.Logger);
 }
 
 // Configure the HTTP request pipeline
@@ -109,3 +110,76 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+static async Task InitializeDatabaseAsync(AppDbContext dbContext, ILogger logger)
+{
+    var pendingMigrations = (await dbContext.Database.GetPendingMigrationsAsync()).ToList();
+    if (pendingMigrations.Count == 0)
+    {
+        return;
+    }
+
+    var historyTableExists = await TableExistsAsync(dbContext, "__EFMigrationsHistory");
+    if (historyTableExists)
+    {
+        await dbContext.Database.MigrateAsync();
+        return;
+    }
+
+    var knownAppTables = new[] { "Users", "RefreshTokens", "Products", "ProductPrices" };
+    var existingAppTables = new List<string>();
+
+    foreach (var tableName in knownAppTables)
+    {
+        if (await TableExistsAsync(dbContext, tableName))
+        {
+            existingAppTables.Add(tableName);
+        }
+    }
+
+    if (existingAppTables.Count == 0)
+    {
+        await dbContext.Database.MigrateAsync();
+        return;
+    }
+
+    logger.LogWarning(
+        "Skipping automatic migrations because the database already contains application tables ({Tables}) but is missing the EF migrations history table. Baseline the schema manually or recreate the database before applying migrations.",
+        string.Join(", ", existingAppTables));
+}
+
+static async Task<bool> TableExistsAsync(AppDbContext dbContext, string tableName)
+{
+    var connection = dbContext.Database.GetDbConnection();
+    var shouldCloseConnection = connection.State != System.Data.ConnectionState.Open;
+
+    if (shouldCloseConnection)
+    {
+        await connection.OpenAsync();
+    }
+
+    try
+    {
+        await using var command = connection.CreateCommand();
+        command.CommandText = """
+            SELECT COUNT(*)
+            FROM information_schema.tables
+            WHERE table_schema = DATABASE() AND table_name = @tableName;
+            """;
+
+        var parameter = command.CreateParameter();
+        parameter.ParameterName = "@tableName";
+        parameter.Value = tableName;
+        command.Parameters.Add(parameter);
+
+        var result = await command.ExecuteScalarAsync();
+        return Convert.ToInt32(result) > 0;
+    }
+    finally
+    {
+        if (shouldCloseConnection)
+        {
+            await connection.CloseAsync();
+        }
+    }
+}
