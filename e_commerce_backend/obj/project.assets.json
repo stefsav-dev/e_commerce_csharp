@@ -15,6 +15,18 @@
           }
         }
       },
+      "DotNetEnv/3.2.0": {
+        "type": "package",
+        "dependencies": {
+          "Superpower": "3.0.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/DotNetEnv.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/DotNetEnv.dll": {}
+        }
+      },
       "Humanizer.Core/2.14.1": {
         "type": "package",
         "compile": {
@@ -679,6 +691,19 @@
           }
         }
       },
+      "Superpower/3.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net5.0/Superpower.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net5.0/Superpower.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Swashbuckle.AspNetCore/10.0.1": {
         "type": "package",
         "dependencies": {
@@ -918,6 +943,20 @@
         "lib/netstandard2.1/BCrypt.Net-Next.dll",
         "lib/netstandard2.1/BCrypt.Net-Next.xml",
         "readme.md"
+      ]
+    },
+    "DotNetEnv/3.2.0": {
+      "sha512": "2q+PD+aJcRW9QuRcIv4F8WbvEDxI6cwxzZJec2i45cBY4cAKCAoW4ZPkApJ7H82wr6Yfmxx/0kb1nLnRmZrGZA==",
+      "type": "package",
+      "path": "dotnetenv/3.2.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "README.md",
+        "dotnetenv.3.2.0.nupkg.sha512",
+        "dotnetenv.nuspec",
+        "lib/netstandard2.0/DotNetEnv.dll"
       ]
     },
     "Humanizer.Core/2.14.1": {
@@ -2697,6 +2736,22 @@
         "packageIcon.png"
       ]
     },
+    "Superpower/3.0.0": {
+      "sha512": "bjKbAYWePooCAvPxQq+3KnmcLfRggMyRoXmtBMlmCG71bdwBHrO6rmRJ2DRIodg5aztNcxeZXBUVWT+H+MZUhw==",
+      "type": "package",
+      "path": "superpower/3.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Superpower-White-400px.png",
+        "lib/net5.0/Superpower.dll",
+        "lib/net5.0/Superpower.xml",
+        "lib/netstandard2.0/Superpower.dll",
+        "lib/netstandard2.0/Superpower.xml",
+        "superpower.3.0.0.nupkg.sha512",
+        "superpower.nuspec"
+      ]
+    },
     "Swashbuckle.AspNetCore/10.0.1": {
       "sha512": "177+JNAV5TNvy8gLCdrcWBY9n2jdkxiHQDY4vhaExeqUpKrOqDatCcm/kW3kze60GqfnZ2NobD/IKiAPOL+CEw==",
       "type": "package",
@@ -2990,6 +3045,7 @@
   "projectFileDependencyGroups": {
     "net10.0": [
       "BCrypt.Net-Next >= 4.1.0",
+      "DotNetEnv >= 3.2.0",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 10.0.7",
       "Microsoft.AspNetCore.OpenApi >= 10.0.7",
       "Microsoft.EntityFrameworkCore >= 10.0.7",
@@ -3001,25 +3057,24 @@
     ]
   },
   "packageFolders": {
-    "/home/stefanus/.nuget/packages/": {}
+    "C:\\Users\\vivob\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/stefanus/Documents/CODING/LATIHAN/WEB/csharp/NET/e-commerce/e_commerce_backend/e_commerce_backend.csproj",
+      "projectUniqueName": "D:\\PROJECT\\PROJECT LATIHAN\\e_commerce_csharp\\e_commerce_backend\\e_commerce_backend.csproj",
       "projectName": "e_commerce_backend",
-      "projectPath": "/home/stefanus/Documents/CODING/LATIHAN/WEB/csharp/NET/e-commerce/e_commerce_backend/e_commerce_backend.csproj",
-      "packagesPath": "/home/stefanus/.nuget/packages/",
-      "outputPath": "/home/stefanus/Documents/CODING/LATIHAN/WEB/csharp/NET/e-commerce/e_commerce_backend/obj/",
+      "projectPath": "D:\\PROJECT\\PROJECT LATIHAN\\e_commerce_csharp\\e_commerce_backend\\e_commerce_backend.csproj",
+      "packagesPath": "C:\\Users\\vivob\\.nuget\\packages\\",
+      "outputPath": "D:\\PROJECT\\PROJECT LATIHAN\\e_commerce_csharp\\e_commerce_backend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/home/stefanus/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\vivob\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
       ],
       "sources": {
-        "/usr/lib/dotnet/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -3038,7 +3093,7 @@
         "auditLevel": "low",
         "auditMode": "all"
       },
-      "SdkAnalysisLevel": "10.0.100"
+      "SdkAnalysisLevel": "10.0.200"
     },
     "frameworks": {
       "net10.0": {
@@ -3047,6 +3102,10 @@
           "BCrypt.Net-Next": {
             "target": "Package",
             "version": "[4.1.0, )"
+          },
+          "DotNetEnv": {
+            "target": "Package",
+            "version": "[3.2.0, )"
           },
           "Microsoft.AspNetCore.Authentication.JwtBearer": {
             "target": "Package",
@@ -3102,7 +3161,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.107/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.203/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.AspNetCore": "(,10.0.32767]",
           "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

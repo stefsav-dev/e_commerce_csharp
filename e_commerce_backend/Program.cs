@@ -8,6 +8,7 @@ using e_commerce_backend.Data;
 using e_commerce_backend.Helpers;
 using e_commerce_backend.Services;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
