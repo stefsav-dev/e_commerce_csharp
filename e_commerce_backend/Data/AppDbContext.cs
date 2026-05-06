@@ -10,6 +10,11 @@ public class AppDbContext : DbContext
     public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<ProductPrice> ProductPrices { get; set; }
+    public DbSet<Cart> Carts { get; set; }
+    public DbSet<CartItem> CartItems { get; set; }
+    public DbSet<Order> Orders { get; set; }
+    public DbSet<OrderDetail> OrderDetails { get; set; }
+    public DbSet<Payment> Payments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -41,6 +46,28 @@ public class AppDbContext : DbContext
             .HasOne(pp => pp.Product)
             .WithMany(p => p.ProductPrices)
             .HasForeignKey(pp => pp.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Cart>()
+            .HasOne(c => c.User)
+            .WithMany()
+            .HasForeignKey(c => c.UserId);
+
+        modelBuilder.Entity<CartItem>()
+            .HasOne(ci => ci.Cart)
+            .WithMany(c => c.CartItems)
+            .HasForeignKey(ci => ci.CartId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Order>()
+            .HasOne(o => o.Cart)
+            .WithOne(c => c.Order)
+            .HasForeignKey<Order>(o => o.CartId);
+
+        modelBuilder.Entity<Payment>()
+            .HasOne(p => p.Order)
+            .WithOne(o => o.Payment)
+            .HasForeignKey<Payment>(p => p.OrderId)
             .OnDelete(DeleteBehavior.Cascade);
 
         seedData(modelBuilder);

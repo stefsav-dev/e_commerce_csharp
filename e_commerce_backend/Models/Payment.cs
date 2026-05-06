@@ -9,57 +9,25 @@ public class Payment
     public int Id { get; set; }
 
     [Required]
+    public int OrderId { get; set; }
+
+    [ForeignKey("OrderId")]
+    public Order Order { get; set; } = null!;
+
+    [Required]
     [MaxLength(50)]
-    public string OrderNumber { get; set; } = String.Empty;
-
-    [Required]
-    public int UserId { get; set; }
-
-    [ForeignKey("UserId")]
-    public User User { get; set; } = null!;
-
-    [Required]
-    public int CartId { get; set; }
-
-    [ForeignKey("CardId")]
-    public Cart Cart { get; set; } = null!;
+    public string PaymentMethod { get; set; } = string.Empty;
 
     [Required]
     [Column(TypeName = "decimal(18,2)")]
-    public decimal  SubtotalAmount { get; set; }
-
-    [Column(TypeName = "decimal(18,2)")]
-    public decimal DiscountAmount { get; set; } = 0;
-
-    [MaxLength(200)]
-    public string DiscountDescription { get; set; } = String.Empty;
-
-    [Column(TypeName = "decimal(18,2)")]
-    public decimal TaxAmount{ get; set; } = 0;
-
-    [Column(TypeName = "decimal(5,2)")]
-    public decimal TaxRate { get; set; } = 11.00m;
-
-    [Required]
-    [Column(TypeName = "decimal(18,2)")]
-    public decimal TotalAmount { get; set; }
+    public decimal Amount { get; set; }
 
     [Required]
     [MaxLength(20)]
     public string Status { get; set; } = "Pending";
 
-    public DateTime OrderDate { get; set; } = DateTime.UtcNow;
+    [MaxLength(100)]
+    public string TransactionId { get; set; } = string.Empty;
 
     public DateTime? PaymentDate { get; set; }
-    
-    public DateTime? ShippedDate { get; set; }
-    
-    public DateTime? DeliveredDate { get; set; }
-    
-    [MaxLength(500)]
-    public string Notes { get; set; } = string.Empty;
-    
-    // Navigation properties
-    public ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
-    public Payment? Payment { get; set; }
 }

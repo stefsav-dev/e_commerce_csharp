@@ -8,6 +8,7 @@ using e_commerce_backend.Data;
 using e_commerce_backend.Helpers;
 using e_commerce_backend.Services;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
@@ -80,6 +81,7 @@ builder.Services.AddAuthentication(options =>
 // Register Services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICartService, CartService>();
 
 // Authorization Policies
 builder.Services.AddAuthorization(options =>

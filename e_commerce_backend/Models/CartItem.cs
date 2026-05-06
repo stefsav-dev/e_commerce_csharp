@@ -9,7 +9,7 @@ public class CartItem
     public int Id { get; set; }
     
     [Required]
-    public int CardId { get; set; }
+    public int CartId { get; set; }
     
     [ForeignKey("CartId")]
     public Cart Cart { get; set; } = null!;
