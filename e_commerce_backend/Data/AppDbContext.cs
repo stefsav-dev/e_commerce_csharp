@@ -5,6 +5,11 @@ namespace e_commerce_backend.Data;
 
 public class AppDbContext : DbContext
 {
+    private const string AdminPasswordHash = "$2a$11$mPw4DynyRXeLqWrTRVkILuSmahKzJ4zGKJ8.pnIorkzD1TudwNFGO";
+    private const string UserPasswordHash = "$2a$11$8UsVKDnVpHqTQZ2UzhbBd.aM512twQZygQNbfq1bysLNboF0p4h86";
+    private static readonly DateTime PromoEffectiveDateUtc = new(2024, 3, 1, 0, 0, 0, DateTimeKind.Utc);
+    private static readonly DateTime PromoExpiryDateUtc = new(2024, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options){}
     public DbSet<User> Users { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
@@ -80,7 +85,7 @@ public class AppDbContext : DbContext
             Id = 1,
             Username = "admin",
             Email = "admin@example.com",
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin@123"),
+            PasswordHash = AdminPasswordHash,
             Role = "Admin",
             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
         };
@@ -90,7 +95,7 @@ public class AppDbContext : DbContext
             Id = 2,
             Username = "user",
             Email = "user@example.com",
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword("User@123"),
+            PasswordHash = UserPasswordHash,
             Role = "User",
             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
         };
@@ -162,9 +167,9 @@ public class AppDbContext : DbContext
                     Price = GetRegularPrice(product.Id) * 0.7m,
                     PriceType = PriceType.Promo,
                     PriceLabel = "Harga Promo",
-                    EffectiveDate = DateTime.UtcNow.AddDays(-30),
-                    ExpiryDate = DateTime.UtcNow.AddDays(30),
-                    CreatedAt = DateTime.UtcNow.AddDays(-30),
+                    EffectiveDate = PromoEffectiveDateUtc,
+                    ExpiryDate = PromoExpiryDateUtc,
+                    CreatedAt = PromoEffectiveDateUtc,
                 });
             }
         }

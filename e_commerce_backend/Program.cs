@@ -7,6 +7,7 @@ using Microsoft.OpenApi;
 using e_commerce_backend.Data;
 using e_commerce_backend.Helpers;
 using e_commerce_backend.Services;
+using MySqlConnector;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,7 +40,7 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddDbContext<AppDbContext>(options => 
     options.UseMySql(
         builder.Configuration.GetConnectionString("DefaultConnection"), 
-        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
+        new MySqlServerVersion(new Version(8, 0, 36))
     ));
 
 builder.Services.AddAuthentication(options =>
@@ -96,7 +97,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await InitializeDatabaseAsync(dbContext, app.Logger);
+    await InitializeDatabaseAsync(dbContext, app.Logger, app.Lifetime.ApplicationStopping);
 }
 
 // Configure the HTTP request pipeline
@@ -113,18 +114,20 @@ app.MapControllers();
 
 app.Run();
 
-static async Task InitializeDatabaseAsync(AppDbContext dbContext, ILogger logger)
+static async Task InitializeDatabaseAsync(AppDbContext dbContext, ILogger logger, CancellationToken cancellationToken)
 {
-    var pendingMigrations = (await dbContext.Database.GetPendingMigrationsAsync()).ToList();
+    await WaitForDatabaseAsync(dbContext, logger, cancellationToken);
+
+    var pendingMigrations = (await dbContext.Database.GetPendingMigrationsAsync(cancellationToken)).ToList();
     if (pendingMigrations.Count == 0)
     {
         return;
     }
 
-    var historyTableExists = await TableExistsAsync(dbContext, "__EFMigrationsHistory");
+    var historyTableExists = await TableExistsAsync(dbContext, "__EFMigrationsHistory", cancellationToken);
     if (historyTableExists)
     {
-        await dbContext.Database.MigrateAsync();
+        await dbContext.Database.MigrateAsync(cancellationToken);
         return;
     }
 
@@ -133,7 +136,7 @@ static async Task InitializeDatabaseAsync(AppDbContext dbContext, ILogger logger
 
     foreach (var tableName in knownAppTables)
     {
-        if (await TableExistsAsync(dbContext, tableName))
+        if (await TableExistsAsync(dbContext, tableName, cancellationToken))
         {
             existingAppTables.Add(tableName);
         }
@@ -141,7 +144,7 @@ static async Task InitializeDatabaseAsync(AppDbContext dbContext, ILogger logger
 
     if (existingAppTables.Count == 0)
     {
-        await dbContext.Database.MigrateAsync();
+        await dbContext.Database.MigrateAsync(cancellationToken);
         return;
     }
 
@@ -150,14 +153,44 @@ static async Task InitializeDatabaseAsync(AppDbContext dbContext, ILogger logger
         string.Join(", ", existingAppTables));
 }
 
-static async Task<bool> TableExistsAsync(AppDbContext dbContext, string tableName)
+static async Task WaitForDatabaseAsync(AppDbContext dbContext, ILogger logger, CancellationToken cancellationToken)
+{
+    const int maxAttempts = 10;
+
+    for (var attempt = 1; attempt <= maxAttempts; attempt++)
+    {
+        try
+        {
+            await dbContext.Database.OpenConnectionAsync(cancellationToken);
+            await dbContext.Database.CloseConnectionAsync();
+            return;
+        }
+        catch (Exception ex) when (ex is MySqlException || ex is InvalidOperationException)
+        {
+            if (attempt == maxAttempts)
+            {
+                throw;
+            }
+
+            logger.LogWarning(
+                ex,
+                "Database is not ready yet. Retrying startup connection ({Attempt}/{MaxAttempts})...",
+                attempt,
+                maxAttempts);
+
+            await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
+        }
+    }
+}
+
+static async Task<bool> TableExistsAsync(AppDbContext dbContext, string tableName, CancellationToken cancellationToken)
 {
     var connection = dbContext.Database.GetDbConnection();
     var shouldCloseConnection = connection.State != System.Data.ConnectionState.Open;
 
     if (shouldCloseConnection)
     {
-        await connection.OpenAsync();
+        await connection.OpenAsync(cancellationToken);
     }
 
     try
@@ -174,7 +207,7 @@ static async Task<bool> TableExistsAsync(AppDbContext dbContext, string tableNam
         parameter.Value = tableName;
         command.Parameters.Add(parameter);
 
-        var result = await command.ExecuteScalarAsync();
+        var result = await command.ExecuteScalarAsync(cancellationToken);
         return Convert.ToInt32(result) > 0;
     }
     finally
