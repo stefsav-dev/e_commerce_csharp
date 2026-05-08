@@ -3057,25 +3057,24 @@
     ]
   },
   "packageFolders": {
-    "/home/stefanus/.nuget/packages/": {}
+    "C:\\Users\\vivob\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/stefanus/Documents/CODING/LATIHAN/WEB/csharp/NET/e-commerce/e_commerce_backend/e_commerce_backend.csproj",
+      "projectUniqueName": "D:\\PROJECT\\PROJECT LATIHAN\\e_commerce_csharp\\e_commerce_backend\\e_commerce_backend.csproj",
       "projectName": "e_commerce_backend",
-      "projectPath": "/home/stefanus/Documents/CODING/LATIHAN/WEB/csharp/NET/e-commerce/e_commerce_backend/e_commerce_backend.csproj",
-      "packagesPath": "/home/stefanus/.nuget/packages/",
-      "outputPath": "/home/stefanus/Documents/CODING/LATIHAN/WEB/csharp/NET/e-commerce/e_commerce_backend/obj/",
+      "projectPath": "D:\\PROJECT\\PROJECT LATIHAN\\e_commerce_csharp\\e_commerce_backend\\e_commerce_backend.csproj",
+      "packagesPath": "C:\\Users\\vivob\\.nuget\\packages\\",
+      "outputPath": "D:\\PROJECT\\PROJECT LATIHAN\\e_commerce_csharp\\e_commerce_backend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/home/stefanus/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\vivob\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
       ],
       "sources": {
-        "/usr/lib/dotnet/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -3094,7 +3093,7 @@
         "auditLevel": "low",
         "auditMode": "all"
       },
-      "SdkAnalysisLevel": "10.0.100"
+      "SdkAnalysisLevel": "10.0.200"
     },
     "frameworks": {
       "net10.0": {
@@ -3162,7 +3161,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.107/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.203/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.AspNetCore": "(,10.0.32767]",
           "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",
