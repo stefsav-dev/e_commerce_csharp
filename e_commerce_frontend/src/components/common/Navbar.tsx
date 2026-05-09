@@ -7,7 +7,9 @@ import {
   ChartBarIcon,
   HeartIcon,
   ClipboardDocumentListIcon,
-  Cog6ToothIcon
+  Cog6ToothIcon,
+  Bars3Icon,
+  XMarkIcon
 } from '@heroicons/react/24/outline';
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { logout } from '../../store/slices/authSlice';
@@ -21,7 +23,9 @@ const Navbar = () => {
   const user = useAppSelector((state) => state.auth.user);
   
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -29,180 +33,322 @@ const Navbar = () => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
       }
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node) && isMobileMenuOpen) {
+        setIsMobileMenuOpen(false);
+      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  }, [isMobileMenuOpen]);
+
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location]);
 
   const handleLogout = () => {
     dispatch(logout());
     setIsDropdownOpen(false);
+    setIsMobileMenuOpen(false);
     navigate('/');
   };
 
   const handleLogin = () => {
     navigate('/login');
+    setIsMobileMenuOpen(false);
   };
 
   const handleRegister = () => {
     navigate('/register');
+    setIsMobileMenuOpen(false);
   };
 
-  return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur">
-      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Logo */}
-        <Link to="/" className="text-xl font-bold text-gray-900 hover:text-indigo-600 transition-colors">
-          E-Commerce
-        </Link>
+  // Navigation links
+  const navLinks = [
+    { path: '/', label: 'Home' },
+    { path: '/products', label: 'Products' },
+    { path: '/deals', label: 'Deals' },
+    { path: '/about', label: 'About' },
+  ];
 
-        {/* Right side buttons */}
-        <div className="flex items-center gap-2">
-          {/* Cart Button */}
-          <Link
-            to="/cart"
-            className="relative rounded-md p-2 text-gray-700 hover:bg-gray-100 transition-colors"
-            aria-label="Cart"
-          >
-            <ShoppingBagIcon className="h-6 w-6" />
-            {totalQuantity > 0 && (
-              <span className="absolute -right-1 -top-1 rounded-full bg-indigo-600 px-1.5 text-xs font-semibold text-white animate-pulse">
-                {totalQuantity}
-              </span>
-            )}
+  return (
+    <>
+      <header className="fixed inset-x-0 top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur">
+        <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+          {/* Logo - Left */}
+          <Link to="/" className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            E-Commerce
           </Link>
 
-          {/* Wishlist Button (only for authenticated users) */}
-          {isAuthenticated && (
+          {/* Desktop Navigation Links - Hidden on mobile */}
+          <div className="hidden md:flex items-center gap-1">
+            {navLinks.map((link) => (
+              <Link
+                key={link.path}
+                to={link.path}
+                className="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50 transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+
+          {/* Right side buttons */}
+          <div className="flex items-center gap-1 sm:gap-2">
+            {/* Cart Button */}
             <Link
-              to="/wishlist"
-              className="rounded-md p-2 text-gray-700 hover:bg-gray-100 transition-colors"
-              aria-label="Wishlist"
+              to="/cart"
+              className="relative rounded-md p-2 text-gray-700 hover:bg-gray-100 transition-colors"
+              aria-label="Cart"
             >
-              <HeartIcon className="h-6 w-6" />
-            </Link>
-          )}
-
-          {/* Auth Section */}
-          {!isAuthenticated ? (
-            // Not logged in - show Login & Register buttons
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handleLogin}
-                className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
-              >
-                <ArrowRightOnRectangleIcon className="h-5 w-5" />
-                Login
-              </button>
-              <button
-                onClick={handleRegister}
-                className="flex items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 transition-colors shadow-sm"
-              >
-                <UserPlusIcon className="h-5 w-5" />
-                Register
-              </button>
-            </div>
-          ) : (
-            // Logged in - show user menu dropdown
-            <div className="relative" ref={dropdownRef}>
-              <button
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center gap-2 rounded-md p-2 text-gray-700 hover:bg-gray-100 transition-colors"
-                aria-label="Account menu"
-              >
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white">
-                  <span className="text-sm font-semibold">
-                    {user?.name?.charAt(0).toUpperCase() || 'U'}
-                  </span>
-                </div>
-                <span className="hidden sm:inline text-sm font-medium">
-                  {user?.name?.split(' ')[0] || 'User'}
+              <ShoppingBagIcon className="h-5 w-5 sm:h-6 sm:w-6" />
+              {totalQuantity > 0 && (
+                <span className="absolute -right-1 -top-1 rounded-full bg-indigo-600 px-1.5 text-xs font-semibold text-white">
+                  {totalQuantity > 9 ? '9+' : totalQuantity}
                 </span>
-                <svg 
-                  className={`w-4 h-4 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`}
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
+              )}
+            </Link>
+
+            {/* Wishlist Button (only for authenticated users) - Desktop only */}
+            {isAuthenticated && (
+              <Link
+                to="/wishlist"
+                className="hidden sm:block rounded-md p-2 text-gray-700 hover:bg-gray-100 transition-colors"
+                aria-label="Wishlist"
+              >
+                <HeartIcon className="h-5 w-5 sm:h-6 sm:w-6" />
+              </Link>
+            )}
+
+            {/* Desktop Auth Buttons - Hidden on mobile */}
+            {!isAuthenticated ? (
+              <div className="hidden md:flex items-center gap-2">
+                <button
+                  onClick={handleLogin}
+                  className="flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-
-              {/* Dropdown Menu */}
-              {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-100 py-2 z-50 animate-slide-down">
-                  {/* User Info */}
-                  <div className="px-4 py-3 border-b border-gray-100">
-                    <p className="text-sm font-semibold text-gray-900">{user?.name}</p>
-                    <p className="text-xs text-gray-500 mt-1">{user?.email}</p>
+                  <ArrowRightOnRectangleIcon className="h-4 w-4" />
+                  Login
+                </button>
+                <button
+                  onClick={handleRegister}
+                  className="flex items-center gap-2 rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700 transition-colors shadow-sm"
+                >
+                  <UserPlusIcon className="h-4 w-4" />
+                  Register
+                </button>
+              </div>
+            ) : (
+              // Desktop User Dropdown - Hidden on mobile
+              <div className="hidden md:block relative" ref={dropdownRef}>
+                <button
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="flex items-center gap-2 rounded-md p-1.5 text-gray-700 hover:bg-gray-100 transition-colors"
+                >
+                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white">
+                    <span className="text-sm font-semibold">
+                      {user?.name?.charAt(0).toUpperCase() || 'U'}
+                    </span>
                   </div>
+                  <span className="text-sm font-medium">
+                    {user?.name?.split(' ')[0] || 'User'}
+                  </span>
+                  <svg 
+                    className={`w-4 h-4 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`}
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
 
-                  {/* Menu Items */}
-                  <div className="py-1">
-                    <Link
-                      to="/profile"
-                      className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                      onClick={() => setIsDropdownOpen(false)}
-                    >
-                      <UserIcon className="h-5 w-5" />
-                      My Profile
-                    </Link>
-                    
-                    <Link
-                      to="/orders"
-                      className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                      onClick={() => setIsDropdownOpen(false)}
-                    >
-                      <ClipboardDocumentListIcon className="h-5 w-5" />
-                      My Orders
-                    </Link>
-                    
-                    <Link
-                      to="/wishlist"
-                      className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                      onClick={() => setIsDropdownOpen(false)}
-                    >
-                      <HeartIcon className="h-5 w-5" />
-                      Wishlist
-                    </Link>
-                    
-                    <Link
-                      to="/dashboard"
-                      className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                      onClick={() => setIsDropdownOpen(false)}
-                    >
-                      <ChartBarIcon className="h-5 w-5" />
-                      Dashboard
-                    </Link>
-                    
-                    <Link
-                      to="/settings"
-                      className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                      onClick={() => setIsDropdownOpen(false)}
-                    >
-                      <Cog6ToothIcon className="h-5 w-5" />
-                      Settings
-                    </Link>
+                {/* Dropdown Menu */}
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-100 py-2 z-50">
+                    <div className="px-4 py-3 border-b border-gray-100">
+                      <p className="text-sm font-semibold text-gray-900 truncate">{user?.name}</p>
+                      <p className="text-xs text-gray-500 mt-1 truncate">{user?.email}</p>
+                    </div>
+                    <div className="py-1">
+                      <Link to="/profile" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" onClick={() => setIsDropdownOpen(false)}>
+                        <UserIcon className="h-5 w-5" />
+                        My Profile
+                      </Link>
+                      <Link to="/orders" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" onClick={() => setIsDropdownOpen(false)}>
+                        <ClipboardDocumentListIcon className="h-5 w-5" />
+                        My Orders
+                      </Link>
+                      <Link to="/wishlist" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" onClick={() => setIsDropdownOpen(false)}>
+                        <HeartIcon className="h-5 w-5" />
+                        Wishlist
+                      </Link>
+                      <Link to="/dashboard" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" onClick={() => setIsDropdownOpen(false)}>
+                        <ChartBarIcon className="h-5 w-5" />
+                        Dashboard
+                      </Link>
+                      <Link to="/settings" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" onClick={() => setIsDropdownOpen(false)}>
+                        <Cog6ToothIcon className="h-5 w-5" />
+                        Settings
+                      </Link>
+                    </div>
+                    <div className="border-t border-gray-100 pt-1">
+                      <button onClick={handleLogout} className="flex w-full items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                        <ArrowRightOnRectangleIcon className="h-5 w-5" />
+                        Logout
+                      </button>
+                    </div>
                   </div>
+                )}
+              </div>
+            )}
 
-                  {/* Logout Button */}
-                  <div className="border-t border-gray-100 pt-1">
-                    <button
-                      onClick={handleLogout}
-                      className="flex w-full items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
-                    >
-                      <ArrowRightOnRectangleIcon className="h-5 w-5" />
-                      Logout
-                    </button>
+            {/* Mobile Menu Button - Hamburger */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
+              aria-label="Menu"
+            >
+              {isMobileMenuOpen ? (
+                <XMarkIcon className="h-6 w-6" />
+              ) : (
+                <Bars3Icon className="h-6 w-6" />
+              )}
+            </button>
+          </div>
+        </nav>
+      </header>
+
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-40 md:hidden">
+          {/* Backdrop */}
+          <div 
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+          
+          {/* Menu Panel */}
+          <div 
+            ref={mobileMenuRef}
+            className="absolute right-0 top-16 bottom-0 w-80 bg-white shadow-2xl overflow-y-auto animate-slide-in-right"
+          >
+            <div className="p-4 space-y-6">
+              {/* User Info Section */}
+              {!isAuthenticated ? (
+                <div className="space-y-3">
+                  <div className="p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl">
+                    <p className="text-sm text-gray-600 mb-3">Welcome to E-Commerce!</p>
+                    <div className="flex gap-3">
+                      <button
+                        onClick={handleLogin}
+                        className="flex-1 flex items-center justify-center gap-2 rounded-lg border border-indigo-600 px-4 py-2 text-sm font-medium text-indigo-600 hover:bg-indigo-50"
+                      >
+                        <ArrowRightOnRectangleIcon className="h-4 w-4" />
+                        Login
+                      </button>
+                      <button
+                        onClick={handleRegister}
+                        className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+                      >
+                        <UserPlusIcon className="h-4 w-4" />
+                        Register
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl">
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white">
+                      <span className="text-lg font-semibold">
+                        {user?.name?.charAt(0).toUpperCase() || 'U'}
+                      </span>
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-semibold text-gray-900">{user?.name}</p>
+                      <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+                    </div>
                   </div>
                 </div>
               )}
+
+              {/* Navigation Links */}
+              <div className="space-y-1">
+                <p className="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Menu</p>
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center px-4 py-3 rounded-lg text-sm font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50 transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+
+              {/* Wishlist Link for Mobile */}
+              {isAuthenticated && (
+                <div className="space-y-1">
+                  <p className="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Account</p>
+                  <Link
+                    to="/wishlist"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50"
+                  >
+                    <HeartIcon className="h-5 w-5" />
+                    Wishlist
+                  </Link>
+                  <Link
+                    to="/profile"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50"
+                  >
+                    <UserIcon className="h-5 w-5" />
+                    My Profile
+                  </Link>
+                  <Link
+                    to="/orders"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50"
+                  >
+                    <ClipboardDocumentListIcon className="h-5 w-5" />
+                    My Orders
+                  </Link>
+                  <Link
+                    to="/dashboard"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50"
+                  >
+                    <ChartBarIcon className="h-5 w-5" />
+                    Dashboard
+                  </Link>
+                  <Link
+                    to="/settings"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50"
+                  >
+                    <Cog6ToothIcon className="h-5 w-5" />
+                    Settings
+                  </Link>
+                  
+                  {/* Logout Button for Mobile */}
+                  <button
+                    onClick={handleLogout}
+                    className="flex w-full items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50"
+                  >
+                    <ArrowRightOnRectangleIcon className="h-5 w-5" />
+                    Logout
+                  </button>
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
-      </nav>
-    </header>
+      )}
+    </>
   );
 };
 

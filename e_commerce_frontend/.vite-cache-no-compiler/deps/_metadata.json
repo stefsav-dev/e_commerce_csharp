@@ -1,73 +1,73 @@
 {
-  "hash": "b91e4167",
-  "configHash": "a7133cb4",
-  "lockfileHash": "46296cd4",
-  "browserHash": "d13a1fbf",
+  "hash": "5e396189",
+  "configHash": "560a309a",
+  "lockfileHash": "7f863c00",
+  "browserHash": "75d74d94",
   "optimized": {
     "@heroicons/react/24/outline": {
       "src": "../../node_modules/@heroicons/react/24/outline/esm/index.js",
       "file": "@heroicons_react_24_outline.js",
-      "fileHash": "8bd71a2f",
-      "needsInterop": false
-    },
-    "@heroicons/react/24/solid": {
-      "src": "../../node_modules/@heroicons/react/24/solid/esm/index.js",
-      "file": "@heroicons_react_24_solid.js",
-      "fileHash": "8cf090ed",
+      "fileHash": "cc723063",
       "needsInterop": false
     },
     "@reduxjs/toolkit": {
       "src": "../../node_modules/@reduxjs/toolkit/dist/redux-toolkit.modern.mjs",
       "file": "@reduxjs_toolkit.js",
-      "fileHash": "b0acad2e",
+      "fileHash": "8d3837e5",
+      "needsInterop": false
+    },
+    "axios": {
+      "src": "../../node_modules/axios/index.js",
+      "file": "axios.js",
+      "fileHash": "3cfa4946",
       "needsInterop": false
     },
     "react-dom": {
       "src": "../../node_modules/react-dom/index.js",
       "file": "react-dom.js",
-      "fileHash": "2ac513c2",
+      "fileHash": "e5250a06",
       "needsInterop": true
     },
     "react-dom/client": {
       "src": "../../node_modules/react-dom/client.js",
       "file": "react-dom_client.js",
-      "fileHash": "1b7a9adf",
+      "fileHash": "026e5caf",
       "needsInterop": true
     },
     "react-redux": {
       "src": "../../node_modules/react-redux/dist/react-redux.mjs",
       "file": "react-redux.js",
-      "fileHash": "b71684b6",
+      "fileHash": "c281fc16",
       "needsInterop": false
     },
     "react-router-dom": {
       "src": "../../node_modules/react-router-dom/dist/index.mjs",
       "file": "react-router-dom.js",
-      "fileHash": "c90b013a",
+      "fileHash": "ecdefa9a",
       "needsInterop": false
     },
     "react": {
       "src": "../../node_modules/react/index.js",
       "file": "react.js",
-      "fileHash": "76a00cfc",
+      "fileHash": "24817c53",
       "needsInterop": true
     },
     "react/jsx-dev-runtime": {
       "src": "../../node_modules/react/jsx-dev-runtime.js",
       "file": "react_jsx-dev-runtime.js",
-      "fileHash": "78f4add9",
+      "fileHash": "44c8aeca",
       "needsInterop": true
     },
     "react/jsx-runtime": {
       "src": "../../node_modules/react/jsx-runtime.js",
       "file": "react_jsx-runtime.js",
-      "fileHash": "65cdbca0",
+      "fileHash": "c6d50cc1",
       "needsInterop": true
     }
   },
   "chunks": {
-    "react-DTjSBzeh": {
-      "file": "react-DTjSBzeh.js",
+    "chunk-CYJPkc-J": {
+      "file": "chunk-CYJPkc-J.js",
       "isDynamicEntry": false
     }
   }

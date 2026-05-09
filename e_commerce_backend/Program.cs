@@ -12,6 +12,25 @@ using MySqlConnector;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// settings cors
+builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowFrontend",
+            policy =>
+            {
+                policy.WithOrigins(
+                    "http://localhost:5173",     
+                    "http://localhost:3000",    
+                    "https://localhost:5173",
+                    "http://localhost:5174"
+                )
+                .AllowAnyMethod()                
+                .AllowAnyHeader()               
+                .AllowCredentials(); 
+            }
+        );
+    });
+
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
 
@@ -92,6 +111,8 @@ builder.Services.AddAuthorization(options =>
 });
 
 var app = builder.Build();
+
+app.UseCors("AllowFrontend");
 
 // Auto-migrate database
 using (var scope = app.Services.CreateScope())
