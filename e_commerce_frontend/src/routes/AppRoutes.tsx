@@ -5,6 +5,8 @@ import PrivateRoute from "./PrivateRoutes";
 import { lazy, Suspense } from "react";
 import Loader from "../components/common/Loader";
 import NotFoundPage from '../pages/NotFoundPage';
+import AdminRoute from './AdminRoute';
+import AdminDashboard from '../pages/admin/AdminDashboard';
 
 const HomePage = lazy(() => import("../pages/HomePage"));
 // const ProductsPage = lazy(() => import("../pages/ProductsPage"));
@@ -36,6 +38,12 @@ const AppRoutes = () => {
                         {/* <Route path="checkout" element={<CheckoutPage/>}/>
                         <Route path="wishlist" element={<WishlistPage/>}/>
                         <Route path="profile" element={<ProfilePage/>}/> */}
+                    </Route>
+
+                    <Route element={<AdminRoute/>}>
+                        <Route path="admin">
+                            <Route index element={<AdminDashboard/>}/>
+                        </Route>
                     </Route>
 
 

@@ -6,7 +6,8 @@ import {
   LockClosedIcon, 
   EyeIcon, 
   EyeSlashIcon,
-  ArrowRightIcon
+  ArrowRightIcon,
+  UserIcon
 } from '@heroicons/react/24/outline';
 import { useAppDispatch } from '../store/hooks';
 import { loginStart, loginSuccess, loginFailure } from '../../src/store/slices/authSlice';
@@ -21,13 +22,13 @@ const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [errors, setErrors] = useState<{ fullname?: string; email?: string; password?: string }>({});
 
   const validateForm = () => {
     const newErrors: { fullname?: string; email?: string; password?: string } = {};
 
     if (!fullname) {
-        newErrors.fullname = 'Fullname is required';
+        newErrors.fullname = 'Your Name is required';
     } 
     
     if (!email) {
@@ -105,7 +106,7 @@ const RegisterPage = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                   </svg>
                 </div>
-                <h2 className="text-4xl font-bold mb-4">Welcome Back!</h2>
+                <h2 className="text-4xl font-bold mb-4">Welcome</h2>
                 <p className="text-lg text-white/90 leading-relaxed">
                   Sign in to continue your shopping journey and discover amazing deals tailored just for you.
                 </p>
@@ -161,10 +162,38 @@ const RegisterPage = () => {
             <div className="bg-white rounded-2xl shadow-xl p-8">
               <div className="hidden lg:block mb-8">
                 <h2 className="text-2xl font-bold text-gray-900">Sign Up</h2>
-                <p className="text-gray-600 mt-2">Welcome back! Please enter your details</p>
+                <p className="text-gray-600 mt-2">Welcome! Please enter your details</p>
               </div>
               
               <form onSubmit={handleSubmit} className="space-y-6">
+
+                {/* Fullname Field */}
+              <div>
+                  <label htmlFor="fullname" className="block text-sm font-medium text-gray-700 mb-2">
+                    Your Name
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <UserIcon className="h-5 w-5 text-gray-400" />
+                    </div>
+                    <input
+                      id="fullname"
+                      type="fullname"
+                      value={fullname}
+                      onChange={(e) => setFullName(e.target.value)}
+                      className={`block w-full pl-10 pr-3 py-2.5 border ${
+                        errors.email ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-indigo-500'
+                      } rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-colors`}
+                      placeholder="Enter Your Name"
+                      disabled={isLoading}
+                    />
+                  </div>
+                  {errors.fullname && (
+                    <p className="mt-1 text-sm text-red-600">{errors.fullname}</p>
+                  )}
+                </div>
+
+
                 {/* Email Field */}
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
@@ -263,24 +292,24 @@ const RegisterPage = () => {
                     </>
                   ) : (
                     <>
-                      Sign In
+                      Sign Up
                       <ArrowRightIcon className="h-5 w-5" />
                     </>
                   )}
                 </button>
                 
                 {/* Divider */}
-                <div className="relative">
+                {/* <div className="relative">
                   <div className="absolute inset-0 flex items-center">
                     <div className="w-full border-t border-gray-300"></div>
                   </div>
                   <div className="relative flex justify-center text-sm">
                     <span className="px-2 bg-white text-gray-500">Or continue with</span>
                   </div>
-                </div>
+                </div> */}
                 
                 {/* Social Login Buttons */}
-                <div className="grid grid-cols-3 gap-3">
+                {/* <div className="grid grid-cols-3 gap-3">
                   <button
                     type="button"
                     className="flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
@@ -308,14 +337,15 @@ const RegisterPage = () => {
                       <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.221-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.56-1.702z"/>
                     </svg>
                   </button>
-                </div>
+                </div> */}
+
               </form>
               
               {/* Register Link */}
               <p className="mt-8 text-center text-sm text-gray-600">
-                Don't have an account?{' '}
-                <Link to="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
-                  Sign up
+                Do you have an Account?{' '}
+                <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+                  Sign In
                 </Link>
               </p>
             </div>
