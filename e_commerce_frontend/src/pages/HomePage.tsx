@@ -87,6 +87,7 @@ const HomePage = () => {
                     <h2>Coba testing E-Commerce</h2>
                     <h2>Coba testing E-Commerce</h2>
                     <h2>Coba testing E-Commerce</h2>
+                    <h2>Coba testing E-Commerce</h2>
 
             </section>
 
