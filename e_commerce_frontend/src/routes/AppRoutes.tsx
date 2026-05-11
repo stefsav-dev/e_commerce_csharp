@@ -7,6 +7,7 @@ import Loader from "../components/common/Loader";
 import NotFoundPage from '../pages/NotFoundPage';
 import AdminRoute from './AdminRoute';
 import AdminDashboard from '../pages/admin/AdminDashboard';
+import AdminProducts from "../pages/admin/AdminProduct";
 
 const HomePage = lazy(() => import("../pages/HomePage"));
 // const ProductsPage = lazy(() => import("../pages/ProductsPage"));
@@ -40,11 +41,15 @@ const AppRoutes = () => {
                         <Route path="profile" element={<ProfilePage/>}/> */}
                     </Route>
 
-                    <Route element={<AdminRoute/>}>
-                        <Route path="admin">
-                            <Route index element={<AdminDashboard/>}/>
-                        </Route>
-                    </Route>
+                <Route element={<AdminRoute/>}>
+                    <Route path="/admin" element={<AdminDashboard/>}/>
+                    <Route path="/admin/products" element={<AdminProducts/>}/>
+                    {/* <Route path="/admin/orders" element={<AdminOrders/>}/>
+                    <Route path="/admin/users" element={<AdminUsers/>}/>
+                    <Route path="/admin/categories" element={<AdminCategories/>}/>
+                    <Route path="/admin/reports" element={<AdminReports/>}/>
+                    <Route path="/admin/settings" element={<AdminSettings/>}/> */}
+                </Route>
 
 
                     {/* <Route path="*" element={<NotFoundPage/>}/> */}

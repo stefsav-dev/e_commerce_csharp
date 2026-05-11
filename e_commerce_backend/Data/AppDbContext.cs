@@ -26,7 +26,7 @@ public class AppDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<User>()
-            .HasIndex(u => u.Username)
+            .HasIndex(u => u.Fullname)
             .IsUnique();
             
         modelBuilder.Entity<User>()
@@ -83,7 +83,7 @@ public class AppDbContext : DbContext
         var adminUser = new User
         {
             Id = 1,
-            Username = "admin",
+            Fullname = "admin",
             Email = "admin@example.com",
             PasswordHash = AdminPasswordHash,
             Role = "Admin",
@@ -93,7 +93,7 @@ public class AppDbContext : DbContext
         var regularUser = new User
         {
             Id = 2,
-            Username = "user",
+            Fullname = "user",
             Email = "user@example.com",
             PasswordHash = UserPasswordHash,
             Role = "User",

@@ -490,7 +490,7 @@ namespace e_commerce_backend.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
-                    b.Property<string>("Username")
+                    b.Property<string>("Fullname")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
@@ -500,7 +500,7 @@ namespace e_commerce_backend.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.HasIndex("Username")
+                    b.HasIndex("Fullname")
                         .IsUnique();
 
                     b.ToTable("Users");
@@ -513,7 +513,7 @@ namespace e_commerce_backend.Migrations
                             Email = "admin@example.com",
                             PasswordHash = "$2a$11$mPw4DynyRXeLqWrTRVkILuSmahKzJ4zGKJ8.pnIorkzD1TudwNFGO",
                             Role = "Admin",
-                            Username = "admin"
+                            Fullname = "admin"
                         },
                         new
                         {
@@ -522,7 +522,7 @@ namespace e_commerce_backend.Migrations
                             Email = "user@example.com",
                             PasswordHash = "$2a$11$8UsVKDnVpHqTQZ2UzhbBd.aM512twQZygQNbfq1bysLNboF0p4h86",
                             Role = "User",
-                            Username = "user"
+                            Fullname = "user"
                         });
                 });
 

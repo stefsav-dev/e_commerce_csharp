@@ -9,7 +9,7 @@ namespace e_commerce_backend.Models
 
         [Required]
         [MaxLength(50)]
-        public string Username { get; set; } = string.Empty;
+        public string Fullname { get; set; } = string.Empty;
 
         [Required]
         [EmailAddress]

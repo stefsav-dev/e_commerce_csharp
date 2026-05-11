@@ -5,8 +5,8 @@ const AdminDashboard = () => {
 
     return (
         <div>
-            <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
-            <p>Welcome back, {user?.name}!</p>
+            {/* <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
+            <p>Welcome back, {user?.name}!</p> */}
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
                 <div className="bg-white rounded-lg shadow p-6">

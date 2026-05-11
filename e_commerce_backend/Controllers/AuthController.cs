@@ -93,13 +93,13 @@ public class AuthController : ControllerBase
     public IActionResult GetProfile()
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var username = User.FindFirst(ClaimTypes.Name)?.Value;
+        var fullname = User.FindFirst(ClaimTypes.Name)?.Value;
         var role = User.FindFirst(ClaimTypes.Role)?.Value;
         
         return Ok(new
         {
             id = userId,
-            username = username,
+            fullname = fullname,
             role = role
         });
     }
