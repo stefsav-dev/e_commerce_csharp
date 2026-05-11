@@ -94,7 +94,7 @@ namespace e_commerce_backend.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "CreatedAt", "Email", "PasswordHash", "Role", "Username" },
+                columns: new[] { "Id", "CreatedAt", "Email", "PasswordHash", "Role", "Fullname" },
                 values: new object[] { 2, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "user@example.com", "$2a$11$eUpip/x9lUjUQc.08jEnjOS2V8eErCMkyapmt3Xf1Cqiw8frqLTUe", "User", "user" });
 
             migrationBuilder.InsertData(

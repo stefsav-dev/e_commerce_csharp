@@ -6,7 +6,7 @@ public class CartDto
 {
     public int CartId { get; set; }
     public int UserId { get; set; }
-    public string Username { get; set; } = string.Empty;
+    public string Fullname { get; set; } = string.Empty;
     public List<CartItemDto> Items { get; set; } = new();
     public CartSummaryDto Summary { get; set; } = new();
     public DateTime CreatedAt { get; set; }

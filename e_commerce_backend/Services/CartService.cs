@@ -229,7 +229,7 @@ public class CartService : ICartService
             var searchTerm = filter.SearchTerm.ToLower();
             query = query.Where(o =>
                 o.OrderNumber.ToLower().Contains(searchTerm) ||
-                o.User.Username.ToLower().Contains(searchTerm));
+                o.User.Fullname.ToLower().Contains(searchTerm));
         }
 
         var orders = await query.OrderByDescending(o => o.OrderDate).ToListAsync();
@@ -312,7 +312,7 @@ public class CartService : ICartService
         {
             CartId = cart.Id,
             UserId = cart.UserId,
-            Username = cart.User?.Username ?? string.Empty,
+            Fullname = cart.User?.Fullname ?? string.Empty,
             Items = cart.CartItems.Select(item => new CartItemDto
             {
                 CartItemId = item.Id,
@@ -368,7 +368,7 @@ public class CartService : ICartService
             OrderId = order.Id,
             OrderNumber = order.OrderNumber,
             UserId = order.UserId,
-            Username = order.User?.Username ?? string.Empty,
+            Fullname = order.User?.Fullname ?? string.Empty,
             OrderDetails = order.OrderDetails.Select(detail => new OrderDetailDto
             {
                 ProductId = detail.ProductId,

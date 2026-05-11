@@ -21,7 +21,7 @@ namespace e_commerce_backend.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Username = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    Fullname = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Email = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -65,7 +65,7 @@ namespace e_commerce_backend.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "CreatedAt", "Email", "PasswordHash", "Role", "Username" },
+                columns: new[] { "Id", "CreatedAt", "Email", "PasswordHash", "Role", "Fullname" },
                 values: new object[] { 1, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "admin@example.com", "$2a$11$TkIBul6T5lVKgKHhhoetTeBAY4C1YpW4T6gEANDHXWCgFrlnLE5HW", "Admin", "admin" });
 
             migrationBuilder.CreateIndex(
@@ -88,7 +88,7 @@ namespace e_commerce_backend.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Username",
                 table: "Users",
-                column: "Username",
+                column: "Fullname",
                 unique: true);
         }
 

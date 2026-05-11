@@ -56,45 +56,63 @@ const LoginPage = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  e.preventDefault();
+  
+  if (!validateForm()) {
+    return;
+  }
+  
+  setIsLoading(true);
+  dispatch(loginStart());
+  
+  try {
+    console.log('Attempting login with:', { email, password: '***' });
     
-    if (!validateForm()) {
-      return;
+    const response = await authService.login({ email, password });
+    
+    console.log('Login successful, response:', response);
+    
+    // Validate response
+    if (!response || !response.token || !response.user) {
+      console.error('Invalid response structure:', response);
+      throw new Error('Invalid response from server');
     }
     
-    setIsLoading(true);
-    dispatch(loginStart());
+    // Store token with expiration if remember me is checked
+    const tokenData = {
+      token: response.token,
+      expiresAt: rememberMe ? Date.now() + 7 * 24 * 3600000 : Date.now() + 3600000
+    };
     
-    try {
-      // Call API using axios
-      const response = await authService.login({ email, password });
-      
-      // Store token with expiration if remember me is checked
-      const tokenData = {
-        token: response.token,
-        expiresAt: rememberMe ? Date.now() + 7 * 24 * 3600000 : Date.now() + 3600000 // 7 days or 1 hour
-      };
-      
-      // Dispatch success with user data from API
-      dispatch(loginSuccess({ 
-        user: response.user, 
-        token: JSON.stringify(tokenData)
-      }));
-      
-      // Redirect based on role
-      if (response.user.role === 'admin') {
-        navigate('/admin');
-      } else {
-        navigate('/');
-      }
-    } catch (error: any) {
-      const errorMessage = error.message || 'Invalid email or password';
-      dispatch(loginFailure(errorMessage));
-      setErrors({ email: errorMessage });
-    } finally {
-      setIsLoading(false);
+    // Dispatch success
+    dispatch(loginSuccess({ 
+      user: response.user, 
+      token: JSON.stringify(tokenData)
+    }));
+    
+    console.log('Redirecting based on role:', response.user.role);
+    
+    // Redirect based on role
+    if (response.user.role === 'admin') {
+      navigate('/admin');
+    } else {
+      navigate('/');
     }
-  };
+  } catch (error: any) {
+    console.error('Login error details:', error);
+    
+    let errorMessage = 'Invalid email or password';
+    
+    if (error.message) {
+      errorMessage = error.message;
+    }
+    
+    dispatch(loginFailure(errorMessage));
+    setErrors({ email: errorMessage });
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">

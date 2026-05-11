@@ -87,7 +87,7 @@ namespace e_commerce_backend.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
-                    b.Property<string>("Username")
+                    b.Property<string>("Fullname")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
@@ -97,7 +97,7 @@ namespace e_commerce_backend.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.HasIndex("Username")
+                    b.HasIndex("Fullname")
                         .IsUnique();
 
                     b.ToTable("Users");
@@ -110,7 +110,7 @@ namespace e_commerce_backend.Migrations
                             Email = "admin@example.com",
                             PasswordHash = "$2a$11$TkIBul6T5lVKgKHhhoetTeBAY4C1YpW4T6gEANDHXWCgFrlnLE5HW",
                             Role = "Admin",
-                            Username = "admin"
+                            Fullname = "admin"
                         });
                 });
 

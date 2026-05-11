@@ -5,7 +5,7 @@ public class OrderDto
     public int OrderId { get; set; }
     public string OrderNumber { get; set; } = string.Empty;
     public int UserId { get; set;}
-    public string Username { get; set; } = string.Empty;
+    public string Fullname { get; set; } = string.Empty;
     public List<OrderDetailDto> OrderDetails { get; set; } = new();
     public decimal SubtotalAmount { get; set; }
     public decimal DiscountAmount { get; set; }

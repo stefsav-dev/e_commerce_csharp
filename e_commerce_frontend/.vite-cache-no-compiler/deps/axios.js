@@ -2039,7 +2039,7 @@ var resolveConfig_default = (config) => {
 	const url = own("url");
 	newConfig.headers = headers = AxiosHeaders$1.from(headers);
 	newConfig.url = buildURL(buildFullPath(baseURL, url, allowAbsoluteUrls), config.params, config.paramsSerializer);
-	if (auth) headers.set("Authorization", "Basic " + btoa((auth.username || "") + ":" + (auth.password ? encodeUTF8(auth.password) : "")));
+	if (auth) headers.set("Authorization", "Basic " + btoa((auth.fullname || "") + ":" + (auth.password ? encodeUTF8(auth.password) : "")));
 	if (utils_default.isFormData(data)) {
 		if (platform_default.hasStandardBrowserEnv || platform_default.hasStandardBrowserWebWorkerEnv) headers.setContentType(void 0);
 		else if (utils_default.isFunction(data.getHeaders)) setFormDataHeaders(headers, data.getHeaders(), own("formDataHeaderPolicy"));

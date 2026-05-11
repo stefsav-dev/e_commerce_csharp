@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
+import type {PayloadAction} from "@reduxjs/toolkit";
 
 interface User {
   id: string;
@@ -16,13 +16,51 @@ interface AuthState {
   error: string | null;
 }
 
-const initialState: AuthState = {
-  user: null,
-  token: localStorage.getItem('token'),
-  isAuthenticated: false,
-  isLoading: false,
-  error: null,
+const getInitialState = (): AuthState => {
+  try {
+    const token = localStorage.getItem('token');
+    const userStr = localStorage.getItem('user');
+    
+    console.log('Loading initial state - token:', token ? 'exists' : 'null');
+    console.log('Loading initial state - userStr:', userStr);
+    
+    let user = null;
+    if (userStr) {
+      try {
+        user = JSON.parse(userStr);
+        if (user && user.role) {
+          user.role = user.role.toLowerCase();
+        }
+        console.log('Parsed user from localStorage:', user);
+      } catch (parseError) {
+        console.error('Error parsing user from localStorage:', parseError);
+        localStorage.removeItem('user');
+      }
+    }
+    
+    const isAuthenticated = !!token && !!user;
+    console.log('Initial isAuthenticated:', isAuthenticated);
+    
+    return {
+      user: user,
+      token: token,
+      isAuthenticated: isAuthenticated,
+      isLoading: false,
+      error: null,
+    };
+  } catch (error) {
+    console.error('Error in getInitialState:', error);
+    return {
+      user: null,
+      token: null,
+      isAuthenticated: false,
+      isLoading: false,
+      error: null,
+    };
+  }
 };
+
+const initialState: AuthState = getInitialState();
 
 const authSlice = createSlice({
   name: 'auth',
@@ -33,12 +71,26 @@ const authSlice = createSlice({
       state.error = null;
     },
     loginSuccess: (state, action: PayloadAction<{ user: User; token: string }>) => {
+      console.log('loginSuccess payload:', action.payload);
+      
+      // Normalize role to lowercase
+      const normalizedUser = {
+        ...action.payload.user,
+        role: action.payload.user.role === 'admin' ? 'admin' : 'user'
+      };
+      
       state.isLoading = false;
       state.isAuthenticated = true;
-      state.user = action.payload.user;
+      state.user = normalizedUser;
       state.token = action.payload.token;
-      localStorage.setItem('token', action.payload.token);
       state.error = null;
+      
+      // Save to localStorage
+      localStorage.setItem('token', action.payload.token);
+      localStorage.setItem('user', JSON.stringify(normalizedUser));
+      
+      console.log('Saved to localStorage - user:', normalizedUser);
+      console.log('Saved to localStorage - token:', action.payload.token.substring(0, 20) + '...');
     },
     loginFailure: (state, action: PayloadAction<string>) => {
       state.isLoading = false;
@@ -50,14 +102,17 @@ const authSlice = createSlice({
       state.token = null;
       state.isAuthenticated = false;
       localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      console.log('Logout - cleared localStorage');
     },
     updateUser: (state, action: PayloadAction<Partial<User>>) => {
       if (state.user) {
         state.user = { ...state.user, ...action.payload };
+        localStorage.setItem('user', JSON.stringify(state.user));
       }
     },
   },
 });
 
 export const { loginStart, loginSuccess, loginFailure, logout, updateUser } = authSlice.actions;
-export default authSlice.reducer; 
+export default authSlice.reducer;

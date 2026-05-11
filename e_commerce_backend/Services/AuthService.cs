@@ -26,8 +26,8 @@ public class AuthService : IAuthService
     public async Task<TokenDto> RegisterAsync(RegisterDto registerDto)
     {
         // Check if user exists
-        if (await _context.Users.AnyAsync(u => u.Username == registerDto.Username))
-            throw new InvalidOperationException("Username already exists");
+        if (await _context.Users.AnyAsync(u => u.Fullname == registerDto.Fullname))
+            throw new InvalidOperationException("Fullname already exists");
             
         if (await _context.Users.AnyAsync(u => u.Email == registerDto.Email))
             throw new InvalidOperationException("Email already exists");
@@ -35,7 +35,7 @@ public class AuthService : IAuthService
         // Create new user
         var user = new User
         {
-            Username = registerDto.Username,
+            Fullname = registerDto.Fullname,
             Email = registerDto.Email,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerDto.Password),
             Role = string.IsNullOrEmpty(registerDto.Role) ? "User" : registerDto.Role,
@@ -122,7 +122,7 @@ public class AuthService : IAuthService
             AccessToken = accessToken,
             RefreshToken = refreshToken,
             ExpiresAt = DateTime.UtcNow.AddMinutes(_jwtSettings.AccessTokenExpirationMinutes),
-            Username = user.Username,
+            Fullname = user.Fullname,
             Role = user.Role
         };
     }
@@ -135,7 +135,7 @@ public class AuthService : IAuthService
         var claims = new[]
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Name, user.Username),
+            new Claim(ClaimTypes.Name, user.Fullname),
             new Claim(ClaimTypes.Email, user.Email),
             new Claim(ClaimTypes.Role, user.Role),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
