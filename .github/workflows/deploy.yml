@@ -13,17 +13,24 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Debug SSH Key
+        run: |
+          echo "SSH Key length: ${#VPS_SSH_KEY}"
+          echo "First 30 chars: ${VPS_SSH_KEY:0:30}"
+        env:
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
+          port: 22
+          debug: true
           script: |
+            echo "Connection successful"
             cd /var/www/ecommerce/e_commerce_csharp
-
             git pull origin main
-
             docker compose down
-
             docker compose up -d --build
