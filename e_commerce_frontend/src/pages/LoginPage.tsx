@@ -6,8 +6,7 @@ import {
   LockClosedIcon, 
   EyeIcon, 
   EyeSlashIcon,
-  ArrowRightIcon,
-  ExclamationTriangleIcon
+  ArrowRightIcon
 } from '@heroicons/react/24/outline';
 import { useAppDispatch } from '../store/hooks';
 import { loginStart, loginSuccess, loginFailure } from '../store/slices/authSlice';
@@ -23,18 +22,6 @@ const LoginPage = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
-
-  // Demo credentials for testing
-  const demoCredentials = [
-    { email: 'user@example.com', password: 'user123', role: 'User' },
-    { email: 'admin@example.com', password: 'admin123', role: 'Admin' }
-  ];
-
-  const fillDemoCredentials = (demoEmail: string, demoPassword: string) => {
-    setEmail(demoEmail);
-    setPassword(demoPassword);
-    setErrors({});
-  };
 
   const validateForm = () => {
     const newErrors: { email?: string; password?: string } = {};

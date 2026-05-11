@@ -5,6 +5,7 @@ import {
   UserIcon, 
   ArrowRightOnRectangleIcon,
   UserPlusIcon,
+  UsersIcon,
   ChartBarIcon,
   HeartIcon,
   ClipboardDocumentListIcon,
@@ -15,8 +16,7 @@ import {
   HomeIcon,
   ShoppingBagIcon as ProductIcon,
   TagIcon,
-  InformationCircleIcon,
-  ShieldCheckIcon
+  InformationCircleIcon
 } from '@heroicons/react/24/outline';
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { logout } from '../../store/slices/authSlice';

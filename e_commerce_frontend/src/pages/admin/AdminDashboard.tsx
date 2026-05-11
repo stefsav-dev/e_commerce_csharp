@@ -1,8 +1,4 @@
-import { useAppSelector } from "../../store/hooks";
-
 const AdminDashboard = () => {
-    const user = useAppSelector((state) => state.auth.user);
-
     return (
         <div>
             {/* <h1 className="text-2xl font-bold mb-6">Dashboard</h1>

@@ -24,12 +24,17 @@ const getInitialState = (): AuthState => {
     console.log('Loading initial state - token:', token ? 'exists' : 'null');
     console.log('Loading initial state - userStr:', userStr);
     
-    let user = null;
+    let user: User | null = null;
     if (userStr) {
       try {
-        user = JSON.parse(userStr);
-        if (user && user.role) {
-          user.role = user.role.toLowerCase();
+        const parsedUser = JSON.parse(userStr) as Partial<User> & { role?: string };
+        if (parsedUser?.id && parsedUser.email && parsedUser.name) {
+          user = {
+            id: parsedUser.id,
+            email: parsedUser.email,
+            name: parsedUser.name,
+            role: parsedUser.role?.toLowerCase() === 'admin' ? 'admin' : 'user',
+          };
         }
         console.log('Parsed user from localStorage:', user);
       } catch (parseError) {
@@ -74,7 +79,7 @@ const authSlice = createSlice({
       console.log('loginSuccess payload:', action.payload);
       
       // Normalize role to lowercase
-      const normalizedUser = {
+      const normalizedUser: User = {
         ...action.payload.user,
         role: action.payload.user.role === 'admin' ? 'admin' : 'user'
       };
