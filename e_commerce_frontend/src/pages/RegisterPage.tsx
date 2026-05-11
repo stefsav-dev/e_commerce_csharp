@@ -10,13 +10,10 @@ import {
   UserIcon,
   CheckCircleIcon,
 } from '@heroicons/react/24/outline';
-import { useAppDispatch } from '../store/hooks';
 import { authService } from '../services/api/auth';
-import { loginSuccess } from '../store/slices/authSlice.ts';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   
   const [fullname, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -93,7 +90,7 @@ const RegisterPage = () => {
         fullname: fullname.trim(),
         email: email,
         password: password,
-        role: "User"
+        role: "user"
       };
       
       console.log('Registering with data:', registerData);

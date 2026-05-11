@@ -4,7 +4,6 @@ import PrivateRoute from "./PrivateRoutes";
 
 import { lazy, Suspense } from "react";
 import Loader from "../components/common/Loader";
-import NotFoundPage from '../pages/NotFoundPage';
 import AdminRoute from './AdminRoute';
 import AdminDashboard from '../pages/admin/AdminDashboard';
 import AdminProducts from "../pages/admin/AdminProduct";
