@@ -1,9 +1,8 @@
 // src/pages/HomePage.tsx
 import { useState, useEffect } from 'react';
-import { motion, useAnimation, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { motion, useAnimation, useScroll, useTransform, AnimatePresence, type Variants } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { 
-  ShoppingBagIcon, 
   TruckIcon, 
   ShieldCheckIcon, 
   ArrowPathIcon,
@@ -13,30 +12,26 @@ import {
   FireIcon,
   ClockIcon,
   ArrowRightIcon,
-  CheckBadgeIcon,
-  DevicePhoneMobileIcon,
-  CreditCardIcon,
-  GlobeAltIcon
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarSolidIcon } from '@heroicons/react/24/solid';
 
 // Animations variants
-const fadeInUp = {
+const fadeInUp: Variants = {
   hidden: { opacity: 0, y: 60 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } }
 };
 
-const fadeInLeft = {
+const fadeInLeft: Variants = {
   hidden: { opacity: 0, x: -100 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: "easeOut" } }
+  visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: 'easeOut' } }
 };
 
-const fadeInRight = {
+const fadeInRight: Variants = {
   hidden: { opacity: 0, x: 100 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: "easeOut" } }
+  visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: 'easeOut' } }
 };
 
-const staggerContainer = {
+const staggerContainer: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -46,12 +41,12 @@ const staggerContainer = {
   }
 };
 
-const scaleUp = {
+const scaleUp: Variants = {
   hidden: { opacity: 0, scale: 0.8 },
   visible: { 
     opacity: 1, 
     scale: 1, 
-    transition: { duration: 0.5, type: "spring", stiffness: 100 } 
+    transition: { duration: 0.5, type: 'spring', stiffness: 100 } 
   }
 };
 
@@ -61,7 +56,6 @@ const HomePage = () => {
   const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1]);
   
   const controls = useAnimation();
-  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -69,7 +63,6 @@ const HomePage = () => {
       const elementPosition = document.getElementById('featured-products')?.offsetTop || 0;
       
       if (scrollPosition > elementPosition + 100) {
-        setIsVisible(true);
         controls.start('visible');
       }
     };
@@ -156,26 +149,27 @@ const HomePage = () => {
       rating: 5
     }
   ];
+  const testimonialCount = testimonials.length;
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setActiveTestimonial((prev) => (prev + 1) % testimonials.length);
+      setActiveTestimonial((prev) => (prev + 1) % testimonialCount);
     }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [testimonialCount]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white overflow-x-hidden">
+    <div className="min-h-screen bg-linear-to-b from-gray-50 to-white overflow-x-hidden">
       
       {/* Progress Bar */}
       <motion.div
-        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 z-50"
+        className="fixed top-0 left-0 right-0 h-1 bg-linear-to-r from-indigo-500 to-purple-500 z-50"
         style={{ scaleX, transformOrigin: "0%" }}
       />
 
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/10 via-purple-600/10 to-pink-600/10" />
+        <div className="absolute inset-0 bg-linear-to-br from-indigo-600/10 via-purple-600/10 to-pink-600/10" />
         
         {/* Animated Background Shapes */}
         <motion.div
@@ -219,7 +213,7 @@ const HomePage = () => {
               >
                 Shop Smarter,
                 <br />
-                <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                <span className="bg-linear-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
                   Live Better
                 </span>
               </motion.h1>
@@ -241,7 +235,7 @@ const HomePage = () => {
                 >
                   <Link 
                     to="/products" 
-                    className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
+                    className="inline-flex items-center gap-2 px-8 py-3 bg-linear-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
                   >
                     Shop Now
                     <ArrowRightIcon className="h-5 w-5" />
@@ -355,7 +349,7 @@ const HomePage = () => {
                 <motion.div 
                   whileHover={{ rotate: 360, scale: 1.1 }}
                   transition={{ duration: 0.5 }}
-                  className={`inline-flex p-4 rounded-2xl bg-gradient-to-r ${feature.color} text-white mb-4`}
+                  className={`inline-flex p-4 rounded-2xl bg-linear-to-r ${feature.color} text-white mb-4`}
                 >
                   {feature.icon}
                 </motion.div>
@@ -434,7 +428,7 @@ const HomePage = () => {
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredProducts.map((product, index) => (
+            {featuredProducts.map((product) => (
               <motion.div
                 key={product.id}
                 variants={scaleUp}
@@ -506,7 +500,7 @@ const HomePage = () => {
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
+                    className="w-full py-2 bg-linear-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
                   >
                     Add to Cart
                   </motion.button>
@@ -523,7 +517,7 @@ const HomePage = () => {
         whileInView="visible"
         viewport={{ once: true }}
         variants={fadeInUp}
-        className="py-20 bg-gradient-to-r from-indigo-600 to-purple-600 relative overflow-hidden"
+        className="py-20 bg-linear-to-r from-indigo-600 to-purple-600 relative overflow-hidden"
       >
         <motion.div
           animate={{ x: [0, 100, 0], rotate: [0, 10, 0] }}
@@ -572,7 +566,7 @@ const HomePage = () => {
               <motion.div
                 key={index}
                 whileHover={{ scale: 1.1 }}
-                className="text-center bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2 min-w-[70px]"
+                className="text-center bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2 min-w-17.5"
               >
                 <div className="text-3xl font-bold text-white">{item.value}</div>
                 <div className="text-sm text-white/80">{item.label}</div>
@@ -648,7 +642,7 @@ const HomePage = () => {
         whileInView="visible"
         viewport={{ once: true }}
         variants={fadeInUp}
-        className="py-20 bg-gradient-to-r from-indigo-900 to-purple-900"
+        className="py-20 bg-linear-to-r from-indigo-900 to-purple-900"
       >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.h2
@@ -676,7 +670,7 @@ const HomePage = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               type="submit"
-              className="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
+              className="px-6 py-3 bg-linear-to-r from-indigo-500 to-purple-500 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
             >
               Subscribe
             </motion.button>
