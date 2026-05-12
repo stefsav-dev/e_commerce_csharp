@@ -2,12 +2,18 @@
   "hash": "be811196",
   "configHash": "a7133cb4",
   "lockfileHash": "d47b92ee",
-  "browserHash": "83bb8f63",
+  "browserHash": "ca32ca9b",
   "optimized": {
     "@heroicons/react/24/outline": {
       "src": "../../node_modules/@heroicons/react/24/outline/esm/index.js",
       "file": "@heroicons_react_24_outline.js",
       "fileHash": "480d555d",
+      "needsInterop": false
+    },
+    "@heroicons/react/24/solid": {
+      "src": "../../node_modules/@heroicons/react/24/solid/esm/index.js",
+      "file": "@heroicons_react_24_solid.js",
+      "fileHash": "51001e05",
       "needsInterop": false
     },
     "@reduxjs/toolkit": {
