@@ -1,3 +1,24 @@
+html,
+body,
+#root {
+    min-height: 100%;
+}
+
+html,
+body {
+    margin: 0;
+    overflow-x: hidden;
+}
+
+body {
+    min-height: 100vh;
+}
+
+#root {
+    min-height: 100vh;
+    overflow: visible;
+}
+
 @keyframes fade-in-up {
     from {
         opacity: 0;

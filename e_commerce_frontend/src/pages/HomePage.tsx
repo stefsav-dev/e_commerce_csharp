@@ -1,6 +1,6 @@
 // src/pages/HomePage.tsx
 import { useState, useEffect } from 'react';
-import { motion, useAnimation, useScroll, useTransform, AnimatePresence, type Variants } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { 
   TruckIcon, 
@@ -15,61 +15,26 @@ import {
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarSolidIcon } from '@heroicons/react/24/solid';
 
-// Animations variants
-const fadeInUp: Variants = {
-  hidden: { opacity: 0, y: 60 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } }
+const fadeIn = {
+  initial: { opacity: 0, y: 16 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.45, ease: 'easeOut' as const }
 };
 
-const fadeInLeft: Variants = {
-  hidden: { opacity: 0, x: -100 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: 'easeOut' } }
-};
-
-const fadeInRight: Variants = {
-  hidden: { opacity: 0, x: 100 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: 'easeOut' } }
-};
-
-const staggerContainer: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2
-    }
-  }
-};
-
-const scaleUp: Variants = {
-  hidden: { opacity: 0, scale: 0.8 },
-  visible: { 
-    opacity: 1, 
-    scale: 1, 
-    transition: { duration: 0.5, type: 'spring', stiffness: 100 } 
-  }
-};
+const fadeInDelay = (delay = 0) => ({
+  initial: { opacity: 0, y: 16 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.45, delay, ease: 'easeOut' as const }
+});
 
 const HomePage = () => {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const { scrollYProgress } = useScroll();
-  const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1]);
-  
-  const controls = useAnimation();
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY + window.innerHeight;
-      const elementPosition = document.getElementById('featured-products')?.offsetTop || 0;
-      
-      if (scrollPosition > elementPosition + 100) {
-        controls.start('visible');
-      }
-    };
-    
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [controls]);
+  const progressScaleX = useSpring(scrollYProgress, {
+    stiffness: 120,
+    damping: 30,
+    restDelta: 0.001
+  });
 
   // Products data
   const featuredProducts = [
@@ -159,48 +124,25 @@ const HomePage = () => {
   }, [testimonialCount]);
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-gray-50 to-white overflow-x-hidden">
-      
-      {/* Progress Bar */}
+    <div className="bg-linear-to-b from-gray-50 to-white overflow-x-hidden">
       <motion.div
-        className="fixed top-0 left-0 right-0 h-1 bg-linear-to-r from-indigo-500 to-purple-500 z-50"
-        style={{ scaleX, transformOrigin: "0%" }}
+        className="fixed inset-x-0 top-0 z-[60] h-1 origin-left bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500"
+        style={{ scaleX: progressScaleX }}
       />
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center overflow-hidden">
+      <section className="relative flex min-h-[calc(100vh-4rem)] items-center overflow-hidden py-12 md:py-16">
         <div className="absolute inset-0 bg-linear-to-br from-indigo-600/10 via-purple-600/10 to-pink-600/10" />
-        
-        {/* Animated Background Shapes */}
-        <motion.div
-          animate={{
-            scale: [1, 1.2, 1],
-            rotate: [0, 90, 0],
-            borderRadius: ["50%", "30%", "50%"]
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-          className="absolute top-20 left-10 w-72 h-72 bg-indigo-300/20 rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{
-            scale: [1.2, 1, 1.2],
-            rotate: [0, -90, 0],
-          }}
-          transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-          className="absolute bottom-20 right-10 w-96 h-96 bg-purple-300/20 rounded-full blur-3xl"
-        />
+        <div className="absolute top-20 left-10 h-72 w-72 rounded-full bg-indigo-300/20 blur-3xl" />
+        <div className="absolute bottom-20 right-10 h-96 w-96 rounded-full bg-purple-300/20 blur-3xl" />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <motion.div
-              initial="hidden"
-              animate="visible"
-              variants={fadeInLeft}
+              {...fadeIn}
             >
               <motion.div
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.2, type: "spring" }}
+                {...fadeInDelay(0.05)}
                 className="inline-flex items-center px-3 py-1 rounded-full bg-indigo-100 text-indigo-600 mb-6"
               >
                 <FireIcon className="h-4 w-4 mr-2" />
@@ -208,7 +150,7 @@ const HomePage = () => {
               </motion.div>
               
               <motion.h1 
-                variants={fadeInUp}
+                {...fadeInDelay(0.1)}
                 className="text-5xl md:text-7xl font-bold mb-6 leading-tight"
               >
                 Shop Smarter,
@@ -219,14 +161,14 @@ const HomePage = () => {
               </motion.h1>
               
               <motion.p 
-                variants={fadeInUp}
+                {...fadeInDelay(0.15)}
                 className="text-lg text-gray-600 mb-8 max-w-lg"
               >
                 Discover amazing products at unbeatable prices. Free shipping on orders over $50.
               </motion.p>
               
               <motion.div 
-                variants={fadeInUp}
+                {...fadeInDelay(0.2)}
                 className="flex flex-col sm:flex-row gap-4"
               >
                 <motion.div
@@ -258,9 +200,7 @@ const HomePage = () => {
 
               {/* Stats */}
               <motion.div 
-                variants={staggerContainer}
-                initial="hidden"
-                animate="visible"
+                {...fadeInDelay(0.25)}
                 className="grid grid-cols-3 gap-4 mt-12"
               >
                 {[
@@ -270,7 +210,6 @@ const HomePage = () => {
                 ].map((stat, index) => (
                   <motion.div
                     key={index}
-                    variants={fadeInUp}
                     whileHover={{ scale: 1.05 }}
                     className="text-center"
                   >
@@ -282,14 +221,10 @@ const HomePage = () => {
             </motion.div>
 
             <motion.div
-              initial="hidden"
-              animate="visible"
-              variants={fadeInRight}
+              {...fadeInDelay(0.15)}
               className="relative"
             >
               <motion.img
-                animate={{ y: [0, -20, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                 src="https://images.unsplash.com/photo-1557821552-17105176677c?w=500"
                 alt="Shopping"
                 className="w-full max-w-md mx-auto rounded-2xl shadow-2xl"
@@ -297,9 +232,7 @@ const HomePage = () => {
               
               {/* Floating badges */}
               <motion.div
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.5 }}
+                {...fadeInDelay(0.25)}
                 className="absolute -top-6 -left-6 bg-white rounded-lg shadow-lg p-3"
               >
                 <div className="flex items-center gap-2">
@@ -309,9 +242,7 @@ const HomePage = () => {
               </motion.div>
               
               <motion.div
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.8 }}
+                {...fadeInDelay(0.3)}
                 className="absolute -bottom-6 -right-6 bg-white rounded-lg shadow-lg p-3"
               >
                 <div className="flex items-center gap-2">
@@ -325,13 +256,7 @@ const HomePage = () => {
       </section>
 
       {/* Features Section */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={staggerContainer}
-        className="py-20 bg-white"
-      >
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
@@ -342,13 +267,12 @@ const HomePage = () => {
             ].map((feature, index) => (
               <motion.div
                 key={index}
-                variants={fadeInUp}
-                whileHover={{ y: -10, transition: { duration: 0.2 } }}
+                {...fadeInDelay(index * 0.08)}
+                whileHover={{ y: -4 }}
                 className="text-center group cursor-pointer"
               >
                 <motion.div 
-                  whileHover={{ rotate: 360, scale: 1.1 }}
-                  transition={{ duration: 0.5 }}
+                  whileHover={{ scale: 1.05 }}
                   className={`inline-flex p-4 rounded-2xl bg-linear-to-r ${feature.color} text-white mb-4`}
                 >
                   {feature.icon}
@@ -359,33 +283,26 @@ const HomePage = () => {
             ))}
           </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Categories Section */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={staggerContainer}
-        className="py-20 bg-gray-50"
-      >
+      <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div variants={fadeInUp} className="text-center mb-12">
+          <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Shop by Category
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Explore our wide range of products across different categories
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {categories.map((category, index) => (
               <motion.div
                 key={index}
-                variants={fadeInUp}
-                whileHover={{ scale: 1.05, y: -5 }}
-                transition={{ type: "spring", stiffness: 300 }}
+                {...fadeInDelay(index * 0.06)}
+                whileHover={{ y: -4 }}
               >
                 <Link
                   to={`/categories/${category.name.toLowerCase()}`}
@@ -401,18 +318,12 @@ const HomePage = () => {
             ))}
           </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Featured Products Section */}
-      <motion.section
-        id="featured-products"
-        initial="hidden"
-        animate={controls}
-        variants={staggerContainer}
-        className="py-20 bg-white"
-      >
+      <section id="featured-products" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div variants={fadeInUp} className="flex justify-between items-center mb-12">
+          <div className="flex justify-between items-center mb-12">
             <div>
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
                 Featured Products
@@ -425,14 +336,14 @@ const HomePage = () => {
                 <ChevronRightIcon className="h-5 w-5 ml-1" />
               </Link>
             </motion.div>
-          </motion.div>
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {featuredProducts.map((product) => (
               <motion.div
                 key={product.id}
-                variants={scaleUp}
-                whileHover={{ y: -10, transition: { duration: 0.2 } }}
+                {...fadeIn}
+                whileHover={{ y: -4 }}
                 className="group relative bg-white rounded-2xl shadow-sm hover:shadow-2xl transition-all overflow-hidden"
               >
                 {/* Discount Badge */}
@@ -449,8 +360,8 @@ const HomePage = () => {
                 
                 {/* Wishlist Button */}
                 <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.98 }}
                   className="absolute top-3 right-3 z-10 p-2 bg-white rounded-full shadow-md"
                 >
                   <HeartIcon className="h-5 w-5 text-gray-600" />
@@ -459,8 +370,7 @@ const HomePage = () => {
                 {/* Product Image */}
                 <div className="relative overflow-hidden bg-gray-100">
                   <motion.img
-                    whileHover={{ scale: 1.1 }}
-                    transition={{ duration: 0.5 }}
+                    whileHover={{ scale: 1.03 }}
                     src={product.image}
                     alt={product.name}
                     className="w-full h-64 object-cover"
@@ -498,7 +408,7 @@ const HomePage = () => {
                   </div>
                   
                   <motion.button
-                    whileHover={{ scale: 1.02 }}
+                    whileHover={{ opacity: 0.95 }}
                     whileTap={{ scale: 0.98 }}
                     className="w-full py-2 bg-linear-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
                   >
@@ -509,35 +419,21 @@ const HomePage = () => {
             ))}
           </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Promo Banner */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={fadeInUp}
-        className="py-20 bg-linear-to-r from-indigo-600 to-purple-600 relative overflow-hidden"
-      >
-        <motion.div
-          animate={{ x: [0, 100, 0], rotate: [0, 10, 0] }}
-          transition={{ duration: 20, repeat: Infinity }}
-          className="absolute -inset-x-20 top-0 bottom-0 bg-white opacity-10 transform rotate-12"
-        />
+      <section className="py-20 bg-linear-to-r from-indigo-600 to-purple-600 relative overflow-hidden">
+        <div className="absolute -inset-x-20 top-0 bottom-0 rotate-12 bg-white opacity-10" />
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.h2
-            initial={{ scale: 0 }}
-            whileInView={{ scale: 1 }}
-            transition={{ type: "spring", stiffness: 100 }}
-            className="text-3xl md:text-5xl font-bold text-white mb-4"
-          >
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
             Summer Mega Sale!
-          </motion.h2>
+          </h2>
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
             Get up to 50% off on selected items. Limited time offer!
           </p>
           <motion.div
+            {...fadeIn}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="inline-block"
@@ -552,11 +448,7 @@ const HomePage = () => {
           </motion.div>
           
           {/* Countdown Timer */}
-          <motion.div 
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            className="mt-8 flex justify-center gap-6"
-          >
+          <div className="mt-8 flex justify-center gap-6">
             {[
               { label: "Days", value: "05" },
               { label: "Hours", value: "12" },
@@ -565,41 +457,36 @@ const HomePage = () => {
             ].map((item, index) => (
               <motion.div
                 key={index}
-                whileHover={{ scale: 1.1 }}
+                {...fadeInDelay(index * 0.06)}
+                whileHover={{ y: -2 }}
                 className="text-center bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2 min-w-17.5"
               >
                 <div className="text-3xl font-bold text-white">{item.value}</div>
                 <div className="text-sm text-white/80">{item.label}</div>
               </motion.div>
             ))}
-          </motion.div>
+          </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Testimonials Section */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeInUp}
-            className="text-center mb-12"
-          >
+          <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
               What Our Customers Say
             </h2>
             <p className="text-gray-600">Join thousands of satisfied customers</p>
-          </motion.div>
+          </div>
 
           <div className="relative max-w-4xl mx-auto">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeTestimonial}
-                initial={{ opacity: 0, x: 100 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -100 }}
-                transition={{ duration: 0.5 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
                 className="bg-white rounded-2xl shadow-xl p-8 text-center"
               >
                 <img 
@@ -637,46 +524,32 @@ const HomePage = () => {
       </section>
 
       {/* Newsletter Section */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={fadeInUp}
-        className="py-20 bg-linear-to-r from-indigo-900 to-purple-900"
-      >
+      <section className="py-20 bg-linear-to-r from-indigo-900 to-purple-900">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.h2
-            initial={{ scale: 0 }}
-            whileInView={{ scale: 1 }}
-            className="text-3xl md:text-4xl font-bold text-white mb-4"
-          >
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Subscribe to Our Newsletter
-          </motion.h2>
+          </h2>
           <p className="text-indigo-100 mb-8">
             Get the latest updates on new products and upcoming sales
           </p>
           
-          <motion.form
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto"
-          >
+          <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
             <input
               type="email"
               placeholder="Enter your email"
               className="flex-1 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
             />
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ opacity: 0.95 }}
+              whileTap={{ scale: 0.98 }}
               type="submit"
               className="px-6 py-3 bg-linear-to-r from-indigo-500 to-purple-500 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
             >
               Subscribe
             </motion.button>
-          </motion.form>
+          </form>
         </div>
-      </motion.section>
+      </section>
     </div>
   );
 };
